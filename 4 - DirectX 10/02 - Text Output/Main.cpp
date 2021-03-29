@@ -190,7 +190,6 @@ void  Init_Direct3D10_1()
         D3D10_1_SDK_VERSION,                // SDKVersion
         &g_pD3D_Device) );                  // ppDevice
 
-        
     // Создание цепочки переключения буферов, в которые будет осуществляться
     // рендеринг и которые будут отображаться на экране. 
     //
@@ -230,7 +229,6 @@ void  Init_Direct3D10_1()
         nullptr,                                // pFullscreenDesc
         nullptr,                                // pRestrictToOutput
         &g_pSwap_Chain) );                      // ppSwapChain
-
 
     // Установка окна вывода (viewport), т.е. определение части цели рендеринга
     // (буфера кадра), в которую будет осуществляться вывод изображения. Окно
