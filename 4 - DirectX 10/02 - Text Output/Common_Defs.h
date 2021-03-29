@@ -13,6 +13,9 @@
     __pragma( warning(push) )                                               \
     __pragma( warning(disable: 5039) )                                      \
     __pragma( warning(disable: 4668) )                                      \
+    __pragma( warning(disable: 5039) )                                      \
+    __pragma( warning(disable: 4005) )                                      \
+    __pragma( warning(disable: 5029) )                                      \
     __pragma( warning(disable: 4820) )
 
 #define  THIRD_PARTY_END                                                    \

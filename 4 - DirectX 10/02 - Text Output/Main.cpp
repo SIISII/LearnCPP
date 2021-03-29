@@ -6,6 +6,7 @@ THIRD_PARTY_START
 #include  <exception>
 #include  <DXGI1_6.h>
 #include  <D3D10_1.h>
+#include  <D3DX10.h>
 
 THIRD_PARTY_END
 
@@ -21,6 +22,7 @@ IDXGIFactory7           *g_pIDXGI_Factory       = nullptr;
 IDXGIAdapter4           *g_pDXGI_Adapter        = nullptr;
 ID3D10Device1           *g_pD3D_Device          = nullptr;
 IDXGISwapChain1         *g_pSwap_Chain          = nullptr;
+LPD3DX10FONT             g_pFont                = nullptr;
 
 
 // =============================================================================
@@ -119,7 +121,7 @@ void  Init_Window(
 
     g_hWnd = CreateWindowW(
         Class_Name,
-        L"DirectX 10: Простейшая программа",
+        L"DirectX 10: Вывод текста",
         WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT,
         CW_USEDEFAULT,
@@ -230,21 +232,19 @@ void  Init_Direct3D10_1()
         nullptr,                                // pRestrictToOutput
         &g_pSwap_Chain) );                      // ppSwapChain
 
-    // Установка окна вывода (viewport), т.е. определение части цели рендеринга
-    // (буфера кадра), в которую будет осуществляться вывод изображения. Окно
-    // вывода используется на стадии растеризации, т.е. превращения трёхмерных
-    // примитивов (треугольников, линий и точек) в пиксели.
-
-    D3D10_VIEWPORT  VP;
-
-    VP.TopLeftX = 0;
-    VP.TopLeftY = 0;
-    VP.Width    = Render_Width;
-    VP.Height   = Render_Height;
-    VP.MinDepth = 0.0f;
-    VP.MaxDepth = 1.0f;
-
-    g_pD3D_Device->RSSetViewports(1, &VP);
+    CHECK_HR( D3DX10CreateFontW(
+        g_pD3D_Device,
+        50,
+        20,
+        1,
+        1,
+        FALSE,
+        0,
+        0,
+        0,
+        DEFAULT_PITCH | FF_MODERN,
+        L"Verdana",
+        &g_pFont) );
 }
 
 
@@ -273,16 +273,30 @@ void  Render_Scene()
 {
     // Определение цвета закраски окна.
 
-    static float  Clear_Color[4] = { 1.0f, 0.0f, 0.5f, 1.0f };
+    const float  Clear_Color[4] = { 1.0f, 0.0f, 0.5f, 1.0f };
 
-    for ( int  I = 0; I < 3; ++I )
-    {
-        Clear_Color[I] += 0.001f;
-        if ( Clear_Color[I] > 1.0f )
-        {
-            Clear_Color[I] = 0.0f;
-        }
-    }
+    RECT  Rect;
+
+    Rect.left   = 10;
+    Rect.top    = 10;
+    Rect.right  = Render_Width  - 40;
+    Rect.bottom = Render_Height - 40;
+
+    // Установка окна вывода (viewport), т.е. определение части цели рендеринга
+    // (буфера кадра), в которую будет осуществляться вывод изображения. Окно
+    // вывода используется на стадии растеризации, т.е. превращения трёхмерных
+    // примитивов (треугольников, линий и точек) в пиксели.
+
+    D3D10_VIEWPORT  VP;
+
+    VP.TopLeftX = 0;
+    VP.TopLeftY = 0;
+    VP.Width    = Render_Width;
+    VP.Height   = Render_Height;
+    VP.MinDepth = 0.0f;
+    VP.MaxDepth = 1.0f;
+
+    g_pD3D_Device->RSSetViewports(1, &VP);
 
     // Создание представления цели рендеринга (render target view). Представле-
     // ние - это механизм доступа к памяти, занимаемой некоторым ресурсом (целью
@@ -312,6 +326,14 @@ void  Render_Scene()
     g_pD3D_Device->OMSetRenderTargets(1, &pRender_Target_View, nullptr);
 
     g_pD3D_Device->ClearRenderTargetView(pRender_Target_View, Clear_Color);
+
+    g_pFont->DrawTextW(
+        nullptr,
+        L"Текст в окне",
+        -1,
+        &Rect,
+        DT_CENTER | DT_VCENTER,
+        D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f) );
 
     // Вывод сформированного изображения (переключение буферов).
 
