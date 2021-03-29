@@ -2,30 +2,31 @@
 
 THIRD_PARTY_START
 
-#include  <Windows.h>
 #include  <exception>
+
+#include  <Windows.h>
+
 #include  <DXGI1_6.h>
 #include  <D3D10_1.h>
 #include  <D3DX10.h>
 
 THIRD_PARTY_END
 
-#pragma comment(lib, "DXGI")
-#pragma comment(lib, "D3D10_1")
-
 constexpr uint32  Render_Width  = 640;
 constexpr uint32  Render_Height = 480;
 
 static const wchar_t  File_Name[] = L"Picture.bmp";
 
-HWND                     g_hWnd;
 
-IDXGIFactory7           *g_pIDXGI_Factory       = nullptr;
-IDXGIAdapter4           *g_pDXGI_Adapter        = nullptr;
-ID3D10Device1           *g_pD3D_Device          = nullptr;
-IDXGISwapChain1         *g_pSwap_Chain          = nullptr;
-ID3D10ShaderResourceView   *g_pShader_Resource      = nullptr;
-ID3DX10Sprite              *g_pSprite               = nullptr;
+HWND                        g_hWnd;
+
+IDXGIFactory7              *g_pIDXGI_Factory    = nullptr;
+IDXGIAdapter4              *g_pDXGI_Adapter     = nullptr;
+ID3D10Device1              *g_pD3D_Device       = nullptr;
+IDXGISwapChain1            *g_pSwap_Chain       = nullptr;
+ID3D10ShaderResourceView   *g_pShader_Resource  = nullptr;
+ID3DX10Sprite              *g_pSprite           = nullptr;
+
 
 // =============================================================================
 //
@@ -123,7 +124,7 @@ void  Init_Window(
 
     g_hWnd = CreateWindowW(
         Class_Name,
-        L"DirectX 10: Вывод текста",
+        L"DirectX 10: Вывод спрайта",
         WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT,
         CW_USEDEFAULT,
@@ -153,7 +154,6 @@ void  Init_Direct3D10_1()
 {
     // Создание фабрики DXGI, с помощью которой создаются различные объекты для
     // работы с DirectX.
-
     CHECK_HR( CreateDXGIFactory2(
 #ifdef  _DEBUG
         DXGI_CREATE_FACTORY_DEBUG   |
@@ -165,7 +165,6 @@ void  Init_Direct3D10_1()
     // Адаптер - это графический процессор (ГП) и всё, что обеспечивает его ра-
     // боту, будь то отдельная видеокарта или же ГП, объединённый в одной микро-
     // схеме с центральным процессором (ЦП).
-
     CHECK_HR( g_pIDXGI_Factory->EnumAdapterByGpuPreference(
         0,                                      // Порядковый номер адаптера
         DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE,   // Критерий выбора адаптера
@@ -174,14 +173,12 @@ void  Init_Direct3D10_1()
     // Получение свойств выбранного адаптера. Реально это не требуется и здесь
     // сделано, чтобы можно было визуально проконтролировать, тот ли адаптер
     // был выбран.
-
     DXGI_ADAPTER_DESC3  Adapter_Desc;
 
     CHECK_HR( g_pDXGI_Adapter->GetDesc3(&Adapter_Desc) );
 
     // Создание устройства Direct3D10.1 - т.е. объекта для взаимодействия с гра-
     // фическим процессором (ГП), на котором будет выполняться рендеринг.
-
     CHECK_HR( D3D10CreateDevice1(
         g_pDXGI_Adapter,                    // pAdapter - какой ГП использовать
         D3D10_DRIVER_TYPE_HARDWARE,         // Тип драйвера - реальное железо
@@ -210,7 +207,6 @@ void  Init_Direct3D10_1()
     // тинка из вторичного буфера каким-либо образом переносится в нужную часть
     // первичного буфера. Однако в DirectX12 подобная модель уже не поддержива-
     // ется, и в нём нужно иметь минимум два буфера.
-
     DXGI_SWAP_CHAIN_DESC1  SCD;
 
     SCD.Width               = Render_Width;
@@ -234,40 +230,61 @@ void  Init_Direct3D10_1()
         nullptr,                                // pRestrictToOutput
         &g_pSwap_Chain) );                      // ppSwapChain
 
-    D3DX10_IMAGE_INFO       Info_From_File;
-    D3DX10_IMAGE_LOAD_INFO  Load_Image_Info;
-
-    ZeroMemory(&Info_From_File, sizeof(Info_From_File));
-    ZeroMemory(&Load_Image_Info, sizeof(Load_Image_Info));
+    // Загрузка спрайта (картинки) из файла. Сначала необходимо получить инфор-
+    // мацию об этой картинке, хранящуюся в самом файле. Второй и четвёртый па-
+    // раметны функции D3DX10GetImageInfoFromFileW используются, если загрузка
+    // информации о файле выполняется асинхронно (т.е. если вызов этой функции
+    // запускает процесс загрузки в другом потоке, но не дожидается его завер-
+    // шения).
+    D3DX10_IMAGE_INFO  Image_Info;
 
     CHECK_HR( D3DX10GetImageInfoFromFileW(
-        File_Name,
-        nullptr,
-        &Info_From_File,
-        nullptr) );
+        File_Name,                              // pSrcFile
+        nullptr,                                // pPump
+        &Image_Info,                            // pSrcInfo
+        nullptr) );                             // pSrcInfo
 
-    Load_Image_Info.Width           = Info_From_File.Width;
-    Load_Image_Info.Height          = Info_From_File.Height;
-    Load_Image_Info.Depth           = Info_From_File.Depth;
+    // Получив информацию о рисунке, можно выполнять его загрузку. Если нас га-
+    // рантированно устраивают все без исключения параметры файла, хранящиеся
+    // в файле, мы можем не получать информацию из него, а заполнить структуру
+    // типа D3DX10_IMAGE_LOAD_INFO значениями D3DX10_DEFAULT - тогда соответ-
+    // ствующие данные будут получены прямо из файла. Если нужно использовать
+    // часть информации зи файла, а часть указать самостоятельно, можно исполь-
+    // зовать значение D3DX10_DEFAULT только для тех полей, в которые информация
+    // может заноситься прямо из файла. Кроме того, можно получить её отдельно и
+    // затем скопировать в эту структуру (в данном случае сделано именно так - с
+    // целью иллюстрации подобного подхода, а не из-за реальной необходимости).
+    //
+    // Функция D3DX10CreateShaderResourceViewFromFileW создаёт представление
+    // (view) ресурса (в данном случае картинки, т.е. текстуры) - т.е. описание
+    // того, как шейдер (программа, выполняемая графическим процессором во время
+    // рендеринга) может работать с этим ресурсом.
+    D3DX10_IMAGE_LOAD_INFO  Load_Image_Info;
+
+    Load_Image_Info.Width           = Image_Info.Width;
+    Load_Image_Info.Height          = Image_Info.Height;
+    Load_Image_Info.Depth           = Image_Info.Depth;
     Load_Image_Info.FirstMipLevel   = 1;
-    Load_Image_Info.MipLevels       = Info_From_File.MipLevels;
+    Load_Image_Info.MipLevels       = Image_Info.MipLevels;
     Load_Image_Info.Usage           = D3D10_USAGE_DEFAULT;
     Load_Image_Info.BindFlags       = D3D10_BIND_SHADER_RESOURCE;
     Load_Image_Info.CpuAccessFlags  = 0;
     Load_Image_Info.MiscFlags       = 0;
-    Load_Image_Info.Format          = Info_From_File.Format;
+    Load_Image_Info.Format          = Image_Info.Format;
     Load_Image_Info.Filter          = D3DX10_FILTER_NONE;
     Load_Image_Info.MipFilter       = D3DX10_FILTER_NONE;
-    Load_Image_Info.pSrcInfo        = &Info_From_File;
+    Load_Image_Info.pSrcInfo        = &Image_Info;
 
     CHECK_HR( D3DX10CreateShaderResourceViewFromFileW(
-        g_pD3D_Device,
-        File_Name,
-        &Load_Image_Info,
-        nullptr,
-        &g_pShader_Resource,
-        nullptr) );
+        g_pD3D_Device,                          // pDevice
+        File_Name,                              // pSrcFile
+        &Load_Image_Info,                       // pLoadInfo
+        nullptr,                                // pPump
+        &g_pShader_Resource,                    // ppShaderResourceView
+        nullptr) );                             // pHResult
 
+    // Создание спрайта, т.е. механизма для отрисовки обычных плоских текстур
+    // средствами самого DirectX без явного использования шейдеров пользователя.
     CHECK_HR( D3DX10CreateSprite(g_pD3D_Device, 1, &g_pSprite) );
 }
 
@@ -280,6 +297,8 @@ void  Init_Direct3D10_1()
 
 void  Cleanup()
 {
+    Safe_Release(g_pSprite);
+    Safe_Release(g_pShader_Resource);
     Safe_Release(g_pSwap_Chain);
     Safe_Release(g_pD3D_Device);
     Safe_Release(g_pDXGI_Adapter);
@@ -296,14 +315,12 @@ void  Cleanup()
 void  Render_Scene()
 {
     // Определение цвета закраски окна.
-
     const float  Clear_Color[4] = { 1.0f, 0.0f, 0.5f, 1.0f };
 
     // Установка окна вывода (viewport), т.е. определение части цели рендеринга
     // (буфера кадра), в которую будет осуществляться вывод изображения. Окно
     // вывода используется на стадии растеризации, т.е. превращения трёхмерных
     // примитивов (треугольников, линий и точек) в пиксели.
-
     D3D10_VIEWPORT  VP;
 
     VP.TopLeftX = 0;
@@ -324,7 +341,6 @@ void  Render_Scene()
     // Чтобы создать представление, сначала надо получить цель рендеринга, т.е.
     // вторичный буфер. Текущий используемый вторичный буфер всегда имеет номер
     // 0, поскольку Direct3D при переключении буферов меняет их местами.
-
     ID3D10Resource          *pBack_Buffer;
     ID3D10RenderTargetView  *pRender_Target_View;
 
@@ -337,12 +353,12 @@ void  Render_Scene()
 
     Safe_Release(pBack_Buffer);
 
-    // Привязка представления к конвейеру и очистка буфера (закраска его задан-
-    // ным цветом).
-
+    // Привязка представления к конвейеру.
     g_pD3D_Device->OMSetRenderTargets(1, &pRender_Target_View, nullptr);
 
+    // Начало рендеринга: очистка буфера (закраска его фоновым цветом).
     g_pD3D_Device->ClearRenderTargetView(pRender_Target_View, Clear_Color);
+
 
     D3DXMATRIX  M_World;
     D3DXMATRIX  M_View;
@@ -393,7 +409,6 @@ void  Render_Scene()
     g_pSprite->End();
 
     // Вывод сформированного изображения (переключение буферов).
-
     g_pSwap_Chain->Present(0, DXGI_PRESENT_RESTART);
 
     Safe_Release(pRender_Target_View);

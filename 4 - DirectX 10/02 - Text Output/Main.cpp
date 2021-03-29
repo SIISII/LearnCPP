@@ -2,27 +2,28 @@
 
 THIRD_PARTY_START
 
-#include  <Windows.h>
 #include  <exception>
+
+#include  <Windows.h>
+
 #include  <DXGI1_6.h>
 #include  <D3D10_1.h>
 #include  <D3DX10.h>
 
 THIRD_PARTY_END
 
-#pragma comment(lib, "DXGI")
-#pragma comment(lib, "D3D10_1")
 
 constexpr uint32  Render_Width  = 640;
 constexpr uint32  Render_Height = 480;
 
-HWND                     g_hWnd;
+HWND                g_hWnd;
 
-IDXGIFactory7           *g_pIDXGI_Factory       = nullptr;
-IDXGIAdapter4           *g_pDXGI_Adapter        = nullptr;
-ID3D10Device1           *g_pD3D_Device          = nullptr;
-IDXGISwapChain1         *g_pSwap_Chain          = nullptr;
-LPD3DX10FONT             g_pFont                = nullptr;
+IDXGIFactory7      *g_pIDXGI_Factory    = nullptr;
+IDXGIAdapter4      *g_pDXGI_Adapter     = nullptr;
+ID3D10Device1      *g_pD3D_Device       = nullptr;
+IDXGISwapChain1    *g_pSwap_Chain       = nullptr;
+
+LPD3DX10FONT        g_pFont             = nullptr;
 
 
 // =============================================================================
@@ -151,7 +152,6 @@ void  Init_Direct3D10_1()
 {
     // Создание фабрики DXGI, с помощью которой создаются различные объекты для
     // работы с DirectX.
-
     CHECK_HR( CreateDXGIFactory2(
 #ifdef  _DEBUG
         DXGI_CREATE_FACTORY_DEBUG   |
@@ -163,7 +163,6 @@ void  Init_Direct3D10_1()
     // Адаптер - это графический процессор (ГП) и всё, что обеспечивает его ра-
     // боту, будь то отдельная видеокарта или же ГП, объединённый в одной микро-
     // схеме с центральным процессором (ЦП).
-
     CHECK_HR( g_pIDXGI_Factory->EnumAdapterByGpuPreference(
         0,                                      // Порядковый номер адаптера
         DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE,   // Критерий выбора адаптера
@@ -172,14 +171,12 @@ void  Init_Direct3D10_1()
     // Получение свойств выбранного адаптера. Реально это не требуется и здесь
     // сделано, чтобы можно было визуально проконтролировать, тот ли адаптер
     // был выбран.
-
     DXGI_ADAPTER_DESC3  Adapter_Desc;
 
     CHECK_HR( g_pDXGI_Adapter->GetDesc3(&Adapter_Desc) );
 
     // Создание устройства Direct3D10.1 - т.е. объекта для взаимодействия с гра-
     // фическим процессором (ГП), на котором будет выполняться рендеринг.
-
     CHECK_HR( D3D10CreateDevice1(
         g_pDXGI_Adapter,                    // pAdapter - какой ГП использовать
         D3D10_DRIVER_TYPE_HARDWARE,         // Тип драйвера - реальное железо
@@ -208,7 +205,6 @@ void  Init_Direct3D10_1()
     // тинка из вторичного буфера каким-либо образом переносится в нужную часть
     // первичного буфера. Однако в DirectX12 подобная модель уже не поддержива-
     // ется, и в нём нужно иметь минимум два буфера.
-
     DXGI_SWAP_CHAIN_DESC1  SCD;
 
     SCD.Width               = Render_Width;
@@ -232,19 +228,20 @@ void  Init_Direct3D10_1()
         nullptr,                                // pRestrictToOutput
         &g_pSwap_Chain) );                      // ppSwapChain
 
+    // Создание шрифта, который будет использоваться для вывода текста.
     CHECK_HR( D3DX10CreateFontW(
-        g_pD3D_Device,
-        50,
-        20,
-        1,
-        1,
-        FALSE,
-        0,
-        0,
-        0,
-        DEFAULT_PITCH | FF_MODERN,
-        L"Verdana",
-        &g_pFont) );
+        g_pD3D_Device,                          // pDevice
+        50,                                     // Height
+        20,                                     // Width
+        1,                                      // Weight
+        1,                                      // MipLevels
+        FALSE,                                  // Italic
+        0,                                      // CharSet
+        0,                                      // OutputPrecision
+        0,                                      // Quality
+        DEFAULT_PITCH | FF_MODERN,              // PitchAndFamily
+        L"Verdana",                             // pFaceName
+        &g_pFont) );                            // ppFont
 }
 
 
@@ -256,6 +253,7 @@ void  Init_Direct3D10_1()
 
 void  Cleanup()
 {
+    Safe_Release(g_pFont);
     Safe_Release(g_pSwap_Chain);
     Safe_Release(g_pD3D_Device);
     Safe_Release(g_pDXGI_Adapter);
@@ -272,9 +270,9 @@ void  Cleanup()
 void  Render_Scene()
 {
     // Определение цвета закраски окна.
-
     const float  Clear_Color[4] = { 1.0f, 0.0f, 0.5f, 1.0f };
 
+    // Определение области для вывода текста.
     RECT  Rect;
 
     Rect.left   = 10;
@@ -286,7 +284,6 @@ void  Render_Scene()
     // (буфера кадра), в которую будет осуществляться вывод изображения. Окно
     // вывода используется на стадии растеризации, т.е. превращения трёхмерных
     // примитивов (треугольников, линий и точек) в пиксели.
-
     D3D10_VIEWPORT  VP;
 
     VP.TopLeftX = 0;
@@ -307,7 +304,6 @@ void  Render_Scene()
     // Чтобы создать представление, сначала надо получить цель рендеринга, т.е.
     // вторичный буфер. Текущий используемый вторичный буфер всегда имеет номер
     // 0, поскольку Direct3D при переключении буферов меняет их местами.
-
     ID3D10Resource          *pBack_Buffer;
     ID3D10RenderTargetView  *pRender_Target_View;
 
@@ -320,23 +316,22 @@ void  Render_Scene()
 
     Safe_Release(pBack_Buffer);
 
-    // Привязка представления к конвейеру и очистка буфера (закраска его задан-
-    // ным цветом).
-
+    // Привязка представления к конвейеру.
     g_pD3D_Device->OMSetRenderTargets(1, &pRender_Target_View, nullptr);
 
+    // Начало рендеринга: очистка буфера (закраска заданным цветом).
     g_pD3D_Device->ClearRenderTargetView(pRender_Target_View, Clear_Color);
 
+    // Вывод текста.
     g_pFont->DrawTextW(
-        nullptr,
-        L"Текст в окне",
-        -1,
-        &Rect,
-        DT_CENTER | DT_VCENTER,
-        D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f) );
+        nullptr,                                // pSprite
+        L"Текст в окне",                        // pString
+        -1,                                     // Count
+        &Rect,                                  // pRect
+        DT_CENTER | DT_VCENTER,                 // Format
+        D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f) );    // Color
 
     // Вывод сформированного изображения (переключение буферов).
-
     g_pSwap_Chain->Present(0, DXGI_PRESENT_RESTART);
 
     Safe_Release(pRender_Target_View);

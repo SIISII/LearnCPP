@@ -6,14 +6,20 @@
 //
 // =============================================================================
 
-//#pragma  warning(disable: 5045)
-//#pragma  warning(disable: 28251)
+// 'XXXX': function not inlined
+#pragma warning(disable: 4710)
+
+// function 'XXXX' selected for automatic inline expansion
+#pragma warning(disable: 4711)
+
 
 #define  THIRD_PARTY_START                                                  \
     __pragma( warning(push) )                                               \
-    __pragma( warning(disable: 5039) )                                      \
+    __pragma( warning(disable: 4005) )                                      \
     __pragma( warning(disable: 4668) )                                      \
-    __pragma( warning(disable: 4820) )
+    __pragma( warning(disable: 4820) )                                      \
+    __pragma( warning(disable: 5039) )
+
 
 #define  THIRD_PARTY_END                                                    \
     __pragma( warning(pop) )
@@ -26,7 +32,6 @@
 // =============================================================================
 
 #include  <cstdint>
-
 
 using  uint8        = std::uint8_t;
 using  uint16       = std::uint16_t;
