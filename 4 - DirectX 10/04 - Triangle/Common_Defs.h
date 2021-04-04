@@ -11,6 +11,9 @@
 
 // function 'XXXX' selected for automatic inline expansion
 #pragma warning(disable: 4711)
+
+// Compiler will insert Spectre mitigation for memory load if /Qspectre switch
+// specified
 #pragma warning(disable: 5045)
 
 

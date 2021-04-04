@@ -401,10 +401,11 @@ void  Render_Scene()
 
     Safe_Release(pBack_Buffer);
 
-    // Привязка представления к конвейеру и очистка буфера (закраска его задан-
-    // ным цветом).
+    // Привязка представления к конвейеру.
     g_pD3D_Device->OMSetRenderTargets(1, &pRender_Target_View, nullptr);
 
+    // Начало рендеринга: очистка вторичного буфера (т.е. закраска его заданным
+    // цветом фона).
     g_pD3D_Device->ClearRenderTargetView(pRender_Target_View, Clear_Color);
 
     // Собственно рендеринг. Выполняются проходы, заданные в используемой тех-
