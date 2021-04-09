@@ -18,26 +18,28 @@ constexpr uint32  Render_Height = 480;
 
 constexpr wchar_t  Shader_File_Name[] = L"Shader.fx";
 
-HWND                        g_hWnd;
 
-IDXGIFactory7              *g_pIDXGI_Factory    = nullptr;
-IDXGIAdapter4              *g_pDXGI_Adapter     = nullptr;
-ID3D10Device1              *g_pD3D_Device       = nullptr;
-IDXGISwapChain1            *g_pSwap_Chain       = nullptr;
+HWND                         g_hWnd;
 
-ID3D10Effect               *g_pEffect              = nullptr;
-ID3D10EffectTechnique      *g_pTechnique           = nullptr;
+IDXGIFactory7               *g_pIDXGI_Factory   = nullptr;
+IDXGIAdapter4               *g_pDXGI_Adapter    = nullptr;
+ID3D10Device1               *g_pD3D_Device      = nullptr;
+IDXGISwapChain1             *g_pSwap_Chain      = nullptr;
 
-ID3D10InputLayout          *g_pVertex_Layout       = nullptr;
-ID3D10Buffer               *g_pVertex_Buffer       = nullptr;
+ID3D10Effect                *g_pEffect          = nullptr;
+ID3D10EffectTechnique       *g_pTechnique       = nullptr;
 
-ID3D10EffectMatrixVariable  *g_pWorld               = nullptr;
-ID3D10EffectMatrixVariable  *g_pView                = nullptr;
-ID3D10EffectMatrixVariable  *g_pProjection          = nullptr;
+ID3D10InputLayout           *g_pVertex_Layout   = nullptr;
+ID3D10Buffer                *g_pVertex_Buffer   = nullptr;
+
+ID3D10EffectMatrixVariable  *g_pWorld           = nullptr;
+ID3D10EffectMatrixVariable  *g_pView            = nullptr;
+ID3D10EffectMatrixVariable  *g_pProjection      = nullptr;
 
 D3DXMATRIX                   g_World;
 D3DXMATRIX                   g_View;
 D3DXMATRIX                   g_Projection;
+
 
 struct  Vertex
 {
@@ -273,7 +275,6 @@ void  Init_Direct3D10_1()
     g_pWorld      = g_pEffect->GetVariableByName("World")->AsMatrix();
     g_pView       = g_pEffect->GetVariableByName("View")->AsMatrix();
     g_pProjection = g_pEffect->GetVariableByName("Projection")->AsMatrix();
-
 
     // Создание формата ("раскладки" - layout) вершинного буфера.
     D3D10_INPUT_ELEMENT_DESC  Layout;
