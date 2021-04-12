@@ -311,16 +311,16 @@ void  Init_Direct3D10_1()
     Vertex  Vertices[] =
     {
         {
-            D3DXVECTOR3(0.0f,  0.5f, 0.5f),
-            D3DXVECTOR4(1.0f,  0.0f, 0.0f, 1.0f),
+            D3DXVECTOR3( 0.0f,  0.5f,  0.5f),
+            D3DXVECTOR4( 1.0f,  0.0f,  0.0f,  1.0f),
         },
         {
-            D3DXVECTOR3(0.5f, -0.5f, 0.5f),
-            D3DXVECTOR4(0.0f,  1.0f, 0.0f, 1.0f),
+            D3DXVECTOR3( 0.5f, -0.5f,  0.5f),
+            D3DXVECTOR4( 0.0f,  1.0f,  0.0f,  1.0f),
         },
         {
-            D3DXVECTOR3(-0.5f, -0.5f, 0.5f),
-            D3DXVECTOR4(0.0f,  0.0f, 1.0f, 1.0f),
+            D3DXVECTOR3(-0.5f, -0.5f,  0.5f),
+            D3DXVECTOR4( 0.0f,  0.0f,  1.0f,  1.0f),
         }
     };
 

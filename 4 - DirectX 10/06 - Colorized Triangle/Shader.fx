@@ -36,10 +36,12 @@ float4  PS(PS_INPUT  Data) : SV_Target
     return Data.Color;
 }
 
+
 RasterizerState  RS_No_Culling
 {
     CullMode = None;
 };
+
 
 technique10  Render_White
 {
