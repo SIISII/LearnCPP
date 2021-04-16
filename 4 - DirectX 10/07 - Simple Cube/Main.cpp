@@ -144,7 +144,7 @@ void  Init_Window(
 
     g_hWnd = CreateWindowW(
         Class_Name,
-        L"DirectX 10: Квадрат",
+        L"DirectX 10: Простой куб",
         WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT,
         CW_USEDEFAULT,
@@ -312,110 +312,110 @@ void  Init_Direct3D10_1()
     {
         //Задняя грань
         {
-            D3DXVECTOR3(-0.5f,  -0.5f, 0.5f),
-            D3DXVECTOR4(1.0f,  1.0f, 1.0f, 1.0f),
+            D3DXVECTOR3(-0.5f, -0.5f,  0.5f),
+            D3DXVECTOR4( 1.0f,  1.0f,  1.0f,  1.0f),
         },
         {
-            D3DXVECTOR3(0.5f, 0.5f, 0.5f),
-            D3DXVECTOR4(1.0f,  1.0f, 1.0f, 1.0f),
+            D3DXVECTOR3( 0.5f,  0.5f,  0.5f),
+            D3DXVECTOR4( 1.0f,  1.0f,  1.0f,  1.0f),
         },
         {
-            D3DXVECTOR3(-0.5f,  0.5f, 0.5f),
-            D3DXVECTOR4(1.0f,  1.0f, 1.0f, 1.0f),
+            D3DXVECTOR3(-0.5f,  0.5f,  0.5f),
+            D3DXVECTOR4( 1.0f,  1.0f,  1.0f,  1.0f),
         },
 
         {
-            D3DXVECTOR3(0.5f,  -0.5f, 0.5f),
-            D3DXVECTOR4(1.0f,  1.0f, 1.0f, 1.0f),
+            D3DXVECTOR3( 0.5f, -0.5f,  0.5f),
+            D3DXVECTOR4( 1.0f,  1.0f,  1.0f,  1.0f),
         },
         {
-            D3DXVECTOR3(0.5f,  0.5f, 0.5f),
-            D3DXVECTOR4(1.0f,  1.0f, 1.0f, 1.0f),
+            D3DXVECTOR3( 0.5f,  0.5f,  0.5f),
+            D3DXVECTOR4( 1.0f,  1.0f,  1.0f,  1.0f),
         },
         {
-            D3DXVECTOR3(-0.5f, -0.5f, 0.5f),
-            D3DXVECTOR4(1.0f,  1.0f, 1.0f, 1.0f),
+            D3DXVECTOR3(-0.5f, -0.5f,  0.5f),
+            D3DXVECTOR4( 1.0f,  1.0f,  1.0f,  1.0f),
         },
 
         //Передняя грань
         {
-            D3DXVECTOR3(0.5f,  0.5f, -0.5f),
-            D3DXVECTOR4(0.0f,  1.0f, 0.0f, 1.0f),
+            D3DXVECTOR3( 0.5f,  0.5f, -0.5f),
+            D3DXVECTOR4( 0.0f,  1.0f,  0.0f,  1.0f),
         },
         {
-            D3DXVECTOR3(0.5f, -0.5f, -0.5f),
-            D3DXVECTOR4(0.0f,  1.0f, 0.0f, 1.0f),
+            D3DXVECTOR3( 0.5f, -0.5f, -0.5f),
+            D3DXVECTOR4( 0.0f,  1.0f,  0.0f,  1.0f),
         },
         {
             D3DXVECTOR3(-0.5f, -0.5f, -0.5f),
-            D3DXVECTOR4(0.0f,  1.0f, 0.0f, 1.0f),
+            D3DXVECTOR4( 0.0f,  1.0f,  0.0f,  1.0f),
         },
 
         {
-            D3DXVECTOR3(-0.5f,  -0.5f, -0.5f),
-            D3DXVECTOR4(0.0f,  1.0f, 0.0f, 1.0f),
+            D3DXVECTOR3(-0.5f, -0.5f, -0.5f),
+            D3DXVECTOR4( 0.0f,  1.0f,  0.0f,  1.0f),
         },
         {
-            D3DXVECTOR3(-0.5f, 0.5f, -0.5f),
-            D3DXVECTOR4(0.0f,  1.0f, 0.0f, 1.0f),
+            D3DXVECTOR3(-0.5f,  0.5f, -0.5f),
+            D3DXVECTOR4( 0.0f,  1.0f,  0.0f,  1.0f),
         },
         {
-            D3DXVECTOR3(0.5f, 0.5f, -0.5f),
-            D3DXVECTOR4(0.0f,  1.0f, 0.0f, 1.0f),
+            D3DXVECTOR3( 0.5f,  0.5f, -0.5f),
+            D3DXVECTOR4( 0.0f,  1.0f,  0.0f,  1.0f),
         },
 
         //Левая грань
         {
-            D3DXVECTOR3(-0.5f, 0.5f, 0.5f),
-            D3DXVECTOR4(0.0f,  0.0f, 1.0f, 1.0f),
+            D3DXVECTOR3(-0.5f,  0.5f,  0.5f),
+            D3DXVECTOR4( 0.0f,  0.0f,  1.0f,  1.0f),
         },
         {
             D3DXVECTOR3(-0.5f, -0.5f, -0.5f),
-            D3DXVECTOR4(0.0f,  0.0f, 1.0f, 1.0f),
+            D3DXVECTOR4( 0.0f,  0.0f,  1.0f,  1.0f),
         },
         {
-            D3DXVECTOR3(-0.5f, -0.5f, 0.5f),
-            D3DXVECTOR4(0.0f,  0.0f, 1.0f, 1.0f),
+            D3DXVECTOR3(-0.5f, -0.5f,  0.5f),
+            D3DXVECTOR4( 0.0f,  0.0f,  1.0f,  1.0f),
         },
 
         {
-            D3DXVECTOR3(-0.5f,  0.5f, 0.5f),
-            D3DXVECTOR4(0.0f,  0.0f, 1.0f, 1.0f),
+            D3DXVECTOR3(-0.5f,  0.5f,  0.5f),
+            D3DXVECTOR4( 0.0f,  0.0f,  1.0f,  1.0f),
         },
         {
-            D3DXVECTOR3(-0.5f, 0.5f, -0.5f),
-            D3DXVECTOR4(0.0f,  0.0f, 1.0f, 1.0f),
+            D3DXVECTOR3(-0.5f,  0.5f, -0.5f),
+            D3DXVECTOR4( 0.0f,  0.0f,  1.0f,  1.0f),
         },
         {
             D3DXVECTOR3(-0.5f, -0.5f, -0.5f),
-            D3DXVECTOR4(0.0f,  0.0f, 1.0f, 1.0f),
+            D3DXVECTOR4( 0.0f,  0.0f,  1.0f,  1.0f),
         },
 
         //Правая грань
         {
-            D3DXVECTOR3(0.5f, -0.5f, 0.5f),
-            D3DXVECTOR4(1.0f,  0.0f, 0.0f, 1.0f),
+            D3DXVECTOR3( 0.5f, -0.5f,  0.5f),
+            D3DXVECTOR4( 1.0f,  0.0f,  0.0f,  1.0f),
         },
         {
-            D3DXVECTOR3(0.5f, -0.5f, -0.5f),
-            D3DXVECTOR4(1.0f,  0.0f, 0.0f, 1.0f),
+            D3DXVECTOR3( 0.5f, -0.5f, -0.5f),
+            D3DXVECTOR4( 1.0f,  0.0f,  0.0f,  1.0f),
         },
         {
-            D3DXVECTOR3(0.5f, 0.5f,  0.5f),
-            D3DXVECTOR4(1.0f,  0.0f, 0.0f, 1.0f),
+            D3DXVECTOR3( 0.5f,  0.5f,  0.5f),
+            D3DXVECTOR4( 1.0f,  0.0f,  0.0f,  1.0f),
         },
 
         {
-            D3DXVECTOR3(0.5f,  0.5f, 0.5f),
-            D3DXVECTOR4(1.0f,  0.0f, 0.0f, 1.0f),
+            D3DXVECTOR3( 0.5f,  0.5f,  0.5f),
+            D3DXVECTOR4( 1.0f,  0.0f,  0.0f,  1.0f),
         },
         {
-            D3DXVECTOR3(0.5f,  -0.5f, -0.5f),
-            D3DXVECTOR4(1.0f,  0.0f, 0.0f, 1.0f),
+            D3DXVECTOR3( 0.5f, -0.5f, -0.5f),
+            D3DXVECTOR4( 1.0f,  0.0f,  0.0f,  1.0f),
         },
         {
-            D3DXVECTOR3(0.5f, 0.5f, -0.5f),
-            D3DXVECTOR4(1.0f,  0.0f, 0.0f, 1.0f),
+            D3DXVECTOR3( 0.5f,  0.5f, -0.5f),
+            D3DXVECTOR4( 1.0f,  0.0f,  0.0f,  1.0f),
         },
 
         //Верхняя грань
@@ -424,52 +424,52 @@ void  Init_Direct3D10_1()
             D3DXVECTOR4(1.0f,  1.0f, 0.0f, 1.0f),
         },
         {
-            D3DXVECTOR3(-0.5f, 0.5f, 0.5f),
-            D3DXVECTOR4(1.0f,  1.0f, 0.0f, 1.0f),
+            D3DXVECTOR3(-0.5f,  0.5f,  0.5f),
+            D3DXVECTOR4( 1.0f,  1.0f,  0.0f,  1.0f),
         },
         {
-            D3DXVECTOR3(0.5f, 0.5f, -0.5f),
-            D3DXVECTOR4(1.0f,  1.0f, 0.0f, 1.0f),
+            D3DXVECTOR3( 0.5f,  0.5f, -0.5f),
+            D3DXVECTOR4( 1.0f,  1.0f,  0.0f,  1.0f),
         },
 
         {
-            D3DXVECTOR3(0.5f,  0.5f, -0.5f),
-            D3DXVECTOR4(1.0f,  1.0f, 0.0f, 1.0f),
+            D3DXVECTOR3( 0.5f,  0.5f, -0.5f),
+            D3DXVECTOR4( 1.0f,  1.0f,  0.0f,  1.0f),
         },
         {
-            D3DXVECTOR3(-0.5f, 0.5f, 0.5f),
-            D3DXVECTOR4(1.0f,  1.0f, 0.0f, 1.0f),
+            D3DXVECTOR3(-0.5f,  0.5f,  0.5f),
+            D3DXVECTOR4( 1.0f,  1.0f,  0.0f,  1.0f),
         },
         {
-            D3DXVECTOR3(0.5f, 0.5f, 0.5f),
-            D3DXVECTOR4(1.0f,  1.0f, 0.0f, 1.0f),
+            D3DXVECTOR3( 0.5f,  0.5f,  0.5f),
+            D3DXVECTOR4( 1.0f,  1.0f,  0.0f,  1.0f),
         },
 
         //Нижняя грань
         {
-            D3DXVECTOR3(-0.5f,  -0.5f, -0.5f),
-            D3DXVECTOR4(0.0f,  1.0f, 1.0f, 1.0f),
+            D3DXVECTOR3(-0.5f, -0.5f, -0.5f),
+            D3DXVECTOR4( 0.0f,  1.0f,  1.0f,  1.0f),
         },
         {
-            D3DXVECTOR3(0.5f, -0.5f, -0.5f),
-            D3DXVECTOR4(0.0f,  1.0f, 1.0f, 1.0f),
+            D3DXVECTOR3( 0.5f, -0.5f, -0.5f),
+            D3DXVECTOR4( 0.0f,  1.0f,  1.0f,  1.0f),
         },
         {
-            D3DXVECTOR3(-0.5f, -0.5f, 0.5f),
-            D3DXVECTOR4(0.0f,  1.0f, 1.0f, 1.0f),
+            D3DXVECTOR3(-0.5f, -0.5f,  0.5f),
+            D3DXVECTOR4( 0.0f,  1.0f,  1.0f,  1.0f),
         },
 
         {
-            D3DXVECTOR3(0.5f, -0.5f, -0.5f),
-            D3DXVECTOR4(0.0f,  1.0f, 1.0f, 1.0f),
+            D3DXVECTOR3( 0.5f, -0.5f, -0.5f),
+            D3DXVECTOR4( 0.0f,  1.0f,  1.0f,  1.0f),
         },
         {
-            D3DXVECTOR3(0.5f,  -0.5f, 0.5f),
-            D3DXVECTOR4(0.0f,  1.0f, 1.0f, 1.0f),
+            D3DXVECTOR3( 0.5f, -0.5f,  0.5f),
+            D3DXVECTOR4( 0.0f,  1.0f,  1.0f,  1.0f),
         },
         {
-            D3DXVECTOR3(-0.5f, -0.5f, 0.5f),
-            D3DXVECTOR4(0.0f,  1.0f, 1.0f, 1.0f),
+            D3DXVECTOR3(-0.5f, -0.5f,  0.5f),
+            D3DXVECTOR4( 0.0f,  1.0f,  1.0f,  1.0f),
         },
 
     };
@@ -552,7 +552,7 @@ void  Render_Scene()
     // Определение цвета закраски окна.
     const float  Clear_Color[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 
-    // Угол поворота треугольника.
+    // Угол поворота куба.
     static float  Angle = 0.0f;
 
     // Начальное время.
@@ -567,7 +567,7 @@ void  Render_Scene()
 
     Angle += static_cast<float>(Delta_Time) / 1000.0f;
     
-    // Корректировка мировой матрицы для поворота треугольника.
+    // Корректировка мировой матрицы для поворота куба.
     D3DXMatrixRotationY(&g_World, Angle);
 
     // Привязка матриц к переменным шейдеров.

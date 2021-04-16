@@ -144,7 +144,7 @@ void  Init_Window(
 
     g_hWnd = CreateWindowW(
         Class_Name,
-        L"DirectX 10: Треугольник",
+        L"DirectX 10: Цветной треугольник",
         WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT,
         CW_USEDEFAULT,
@@ -312,15 +312,15 @@ void  Init_Direct3D10_1()
     {
         {
             D3DXVECTOR3( 0.0f,  0.5f,  0.5f),
-            D3DXVECTOR4( 1.0f,  0.0f,  0.0f,  1.0f),
+            D3DXVECTOR4( 1.0f,  0.0f,  0.0f,  1.0f)
         },
         {
             D3DXVECTOR3( 0.5f, -0.5f,  0.5f),
-            D3DXVECTOR4( 0.0f,  1.0f,  0.0f,  1.0f),
+            D3DXVECTOR4( 0.0f,  1.0f,  0.0f,  1.0f)
         },
         {
             D3DXVECTOR3(-0.5f, -0.5f,  0.5f),
-            D3DXVECTOR4( 0.0f,  0.0f,  1.0f,  1.0f),
+            D3DXVECTOR4( 0.0f,  0.0f,  1.0f,  1.0f)
         }
     };
 

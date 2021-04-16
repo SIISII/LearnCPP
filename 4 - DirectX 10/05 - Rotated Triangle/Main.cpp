@@ -143,7 +143,7 @@ void  Init_Window(
 
     g_hWnd = CreateWindowW(
         Class_Name,
-        L"DirectX 10: Треугольник",
+        L"DirectX 10: Вращающийся треугольник",
         WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT,
         CW_USEDEFAULT,
