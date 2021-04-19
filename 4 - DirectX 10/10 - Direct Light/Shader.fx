@@ -34,11 +34,7 @@ PS_INPUT  VS(VS_INPUT  Data)
 
 float4  PS_Direct_Light(PS_INPUT  Data) : SV_Target
 {
-    float4  Color = Light_Color * dot( (float3) Light_Direction, Data.Normal);
-
-    float4  Final_Color = saturate(Color);
-
-    return Final_Color;
+    return  Light_Color * dot( (float3) Light_Direction, Data.Normal);
 }
 
 RasterizerState  RS_No_Culling

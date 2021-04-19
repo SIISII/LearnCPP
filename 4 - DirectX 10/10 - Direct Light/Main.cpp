@@ -566,11 +566,11 @@ void  Render_Scene()
     g_pProjection->SetMatrix(reinterpret_cast<float*>(&g_Projection));
 
     // Установка информации об источнике света.
-    float  Light_Color[4] = {1.0f, 0.7f, 0.2f, 1.0f };
+    float  Light_Color[4] = { 1.0f, 0.7f, 0.2f, 1.0f };
 
     g_pLight_Color->SetFloatVector(reinterpret_cast<float*>(&Light_Color));
 
-    float  Light_Direction[4] = { 0.0f, 0.3f, -1.5f, 1.0f };
+    float  Light_Direction[4] = { 0.0f, 0.6f, -0.8f, 1.0f };
 
     g_pLight_Direction->SetFloatVector(reinterpret_cast<float*>(&Light_Direction));
 
