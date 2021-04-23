@@ -5,6 +5,7 @@ matrix  Projection;
 float4  Light_Color;
 float4  Light_Position;
 
+
 struct  VS_INPUT
 {
     float4  Pos    : POSITION;
@@ -51,10 +52,12 @@ float4  PS_Direct_Light(PS_INPUT  Data) : SV_Target
     return Color;
 }
 
+
 RasterizerState  RS_No_Culling
 {
     CullMode = Back;
 };
+
 
 technique10  Render_White
 {

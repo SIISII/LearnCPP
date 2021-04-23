@@ -13,6 +13,7 @@ THIRD_PARTY_START
 
 THIRD_PARTY_END
 
+
 constexpr uint32  Render_Width  = 640;
 constexpr uint32  Render_Height = 480;
 
@@ -21,7 +22,7 @@ constexpr wchar_t  Shader_File_Name[] = L"Shader.fx";
 
 HWND                         g_hWnd;
 
-IDXGIFactory7               *g_pIDXGI_Factory   = nullptr;
+IDXGIFactory7               *g_pDXGI_Factory    = nullptr;
 IDXGIAdapter4               *g_pDXGI_Adapter    = nullptr;
 ID3D10Device1               *g_pD3D_Device      = nullptr;
 IDXGISwapChain1             *g_pSwap_Chain      = nullptr;
@@ -148,7 +149,7 @@ void  Init_Window(
 
     g_hWnd = CreateWindowW(
         Class_Name,
-        L"DirectX 10: Прямое освещение",
+        L"DirectX 10: Точечное освещение",
         WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT,
         CW_USEDEFAULT,
@@ -183,13 +184,13 @@ void  Init_Direct3D10_1()
         DXGI_CREATE_FACTORY_DEBUG   |
 #endif
         0,
-        IID_PPV_ARGS(&g_pIDXGI_Factory) ) );
+        IID_PPV_ARGS(&g_pDXGI_Factory) ) );
 
     // Получение теоретически самого высокопроизводительного адаптера в системе.
     // Адаптер - это графический процессор (ГП) и всё, что обеспечивает его ра-
     // боту, будь то отдельная видеокарта или же ГП, объединённый в одной микро-
     // схеме с центральным процессором (ЦП).
-    CHECK_HR( g_pIDXGI_Factory->EnumAdapterByGpuPreference(
+    CHECK_HR( g_pDXGI_Factory->EnumAdapterByGpuPreference(
         0,                                      // Порядковый номер адаптера
         DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE,   // Критерий выбора адаптера
         IID_PPV_ARGS(&g_pDXGI_Adapter) ) );     // Объект адаптера
@@ -246,7 +247,7 @@ void  Init_Direct3D10_1()
     SCD.AlphaMode           = DXGI_ALPHA_MODE_IGNORE;
     SCD.Flags               = 0;
 
-    CHECK_HR( g_pIDXGI_Factory->CreateSwapChainForHwnd(
+    CHECK_HR( g_pDXGI_Factory->CreateSwapChainForHwnd(
         g_pD3D_Device,                          // pDevice
         g_hWnd,                                 // hWnd
         &SCD,                                   // pDesc
@@ -277,10 +278,10 @@ void  Init_Direct3D10_1()
     g_pTechnique = g_pEffect->GetTechniqueByName("Render_White");
 
     // Обеспечение связи между переменными программы и шейдеров.
-    g_pWorld      = g_pEffect->GetVariableByName("World")->AsMatrix();
-    g_pView       = g_pEffect->GetVariableByName("View")->AsMatrix();
-    g_pProjection = g_pEffect->GetVariableByName("Projection")->AsMatrix();
-    g_pLight_Color     = g_pEffect->GetVariableByName("Light_Color")->AsVector();
+    g_pWorld          = g_pEffect->GetVariableByName("World")->AsMatrix();
+    g_pView           = g_pEffect->GetVariableByName("View")->AsMatrix();
+    g_pProjection     = g_pEffect->GetVariableByName("Projection")->AsMatrix();
+    g_pLight_Color    = g_pEffect->GetVariableByName("Light_Color")->AsVector();
     g_pLight_Position = g_pEffect->GetVariableByName("Light_Position")->AsVector();
 
     // Создание формата ("раскладки" - layout) вершинного буфера.
@@ -527,7 +528,7 @@ void  Cleanup()
     Safe_Release(g_pSwap_Chain);
     Safe_Release(g_pD3D_Device);
     Safe_Release(g_pDXGI_Adapter);
-    Safe_Release(g_pIDXGI_Factory);
+    Safe_Release(g_pDXGI_Factory);
 }
 
 
@@ -551,7 +552,7 @@ void  Render_Scene()
     // Время, прошедшее с момента последнего рендеринга.
     uint32  Cur_Time = GetTickCount();
 
-    uint32  Delta_Time =  Cur_Time - Last_Time;
+    uint32  Delta_Time = Cur_Time - Last_Time;
 
     Last_Time = Cur_Time;
 
@@ -566,12 +567,10 @@ void  Render_Scene()
     g_pProjection->SetMatrix(reinterpret_cast<float*>(&g_Projection));
 
     // Установка информации об источнике света.
-    float  Light_Color[4] = { 1.0f, 0.7f, 0.2f, 1.0f };
-
-    g_pLight_Color->SetFloatVector(reinterpret_cast<float*>(&Light_Color));
-
+    float  Light_Color[4]    = { 1.0f, 0.7f,  0.2f, 1.0f };
     float  Light_Position[4] = { 1.0f, 1.0f, -2.0f, 1.0f };
 
+    g_pLight_Color->SetFloatVector(reinterpret_cast<float*>(&Light_Color));
     g_pLight_Position->SetFloatVector(reinterpret_cast<float*>(&Light_Position));
 
     // Привязка раскладки входного буфера и самого буфера ко входу графического

@@ -8,6 +8,7 @@ float4  Light_Direction;
 float   Light_Phi;
 float   Light_Theta;
 
+
 struct  VS_INPUT
 {
     float4  Pos    : POSITION;
@@ -96,10 +97,12 @@ float4  PS_Spot_Light(PS_INPUT  Data) : SV_Target
     return Final_Color;
 }
 
+
 RasterizerState  RS_No_Culling
 {
     CullMode = Back;
 };
+
 
 technique10  Render_White
 {
