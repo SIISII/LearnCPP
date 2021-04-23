@@ -24,9 +24,4 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Shader.fx">
-      <Filter>Resource Files</Filter>
-    </FxCompile>
-  </ItemGroup>
 </Project>
