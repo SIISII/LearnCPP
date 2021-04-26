@@ -6,6 +6,9 @@
 //
 // =============================================================================
 
+// 'XXXX': unreferenced inline function has been removed
+#pragma warning(disable: 4514)
+
 // 'XXXX': function not inlined
 #pragma warning(disable: 4710)
 
@@ -29,6 +32,17 @@
 
 #define  THIRD_PARTY_END                                                    \
     __pragma( warning(pop) )
+
+
+// 'XXXX': class has virtual functions, but its trivial destructor is not
+// virtual; instances of objects derived from this class may not be destructed
+// correctly
+#define  DISABLE_WARNING_NO_VIRTUAL_DESTRUCTOR                              \
+    __pragma ( warning(disable: 5204) )
+
+
+#define  ENABLE_WARNING_NO_VIRTUAL_DESTRUCTOR                               \
+    __pragma ( warning(default: 5204) )
 
 
 // =============================================================================

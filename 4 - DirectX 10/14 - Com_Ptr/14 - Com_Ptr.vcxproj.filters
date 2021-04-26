@@ -18,6 +18,9 @@
     <ClInclude Include="Common_Defs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Com_Ptr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">

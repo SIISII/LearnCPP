@@ -156,6 +156,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Common_Defs.h" />
+    <ClInclude Include="Com_Ptr.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
