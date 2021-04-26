@@ -16,14 +16,50 @@ private:
 
     T  *Ptr = nullptr;
 
-public:
-
-    ~Com_Ptr()
+    void Internal_Release()
     {
         if (Ptr != nullptr)
         {
-            Ptr->release();
+            Ptr->Release();
+            Ptr = nullptr;
         }
+    }
+
+    void Internal_Add_Ref()
+    {
+        if (Ptr != nullptr)
+        {
+            Ptr->AddRef();
+        }
+    }
+
+    void Internal_Copy(T* Other) noexcept
+    {
+        if (Ptr != Other)
+        {
+            Internal_Release();
+            Ptr = Other;
+            Internal_Add_Ref();
+        }
+    }
+
+    void Internal_Move(Com_Ptr &Other) noexcept
+    {
+        if (Ptr != Other.Ptr)
+        {
+            Ptr = Other.Ptr;
+            Internal_Add_Ref();
+        }
+        Other.Internal_Release();
+    }
+
+public:
+
+    Com_Ptr() noexcept = default;
+
+    ~Com_Ptr()
+    {
+        Internal_Release();
     }
 
     void** Get_Addr() const
@@ -38,6 +74,24 @@ public:
     T* operator->() const noexcept
     {
         return Ptr;
+    }
+
+    Com_Ptr& operator = (Com_Ptr const &Other) noexcept
+    {
+        Internal_Copy(Other.Ptr);
+        return *this;
+    }
+
+    Com_Ptr& operator = (T *Other) noexcept
+    {
+        Internal_Copy(Other);
+        return *this;
+    }
+
+    Com_Ptr& operator = (Com_Ptr &&Other) noexcept
+    {
+        Internal_Move(Other);
+        return *this;
     }
 };
 
