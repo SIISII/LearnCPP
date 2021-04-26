@@ -2,12 +2,15 @@
 
 THIRD_PARTY_START
 
-#include  <Windows.h>
 #include  <cstdio>
+#include  <exception>
+
+#include  <Windows.h>
 
 #include  <DXGI1_6.h>
 
 THIRD_PARTY_END
+
 
 template<class  T>
 class  Com_Ptr
@@ -16,26 +19,29 @@ private:
 
     T  *Ptr = nullptr;
 
-    void Internal_Release()
+
+    void  Internal_Release()
     {
-        if (Ptr != nullptr)
+        if ( Ptr != nullptr )
         {
             Ptr->Release();
             Ptr = nullptr;
         }
     }
 
-    void Internal_Add_Ref()
+
+    void  Internal_Add_Ref()
     {
-        if (Ptr != nullptr)
+        if ( Ptr != nullptr )
         {
             Ptr->AddRef();
         }
     }
 
-    void Internal_Copy(T* Other) noexcept
+
+    void  Internal_Copy(T  *Other) noexcept
     {
-        if (Ptr != Other)
+        if ( Ptr != Other )
         {
             Internal_Release();
             Ptr = Other;
@@ -43,13 +49,15 @@ private:
         }
     }
 
-    void Internal_Move(Com_Ptr &Other) noexcept
+
+    void  Internal_Move(Com_Ptr  &Other) noexcept
     {
-        if (Ptr != Other.Ptr)
+        if ( Ptr != Other.Ptr )
         {
             Ptr = Other.Ptr;
             Internal_Add_Ref();
         }
+
         Other.Internal_Release();
     }
 
@@ -57,45 +65,51 @@ public:
 
     Com_Ptr() noexcept = default;
 
+
     ~Com_Ptr()
     {
         Internal_Release();
     }
 
-    void** Get_Addr() const
+
+    void**  Get_Addr() const
     {
-        if (Ptr != nullptr)
+        if ( Ptr != nullptr )
         {
             throw std::exception();
         }
+
         return &Ptr;
     }
 
-    T* operator->() const noexcept
+
+    T*  operator->() const noexcept
     {
         return Ptr;
     }
 
-    Com_Ptr& operator = (Com_Ptr const &Other) noexcept
+
+    Com_Ptr&  operator = (Com_Ptr const  &Other) noexcept
     {
         Internal_Copy(Other.Ptr);
         return *this;
     }
 
-    Com_Ptr& operator = (T *Other) noexcept
+    Com_Ptr&  operator = (T  *Other) noexcept
     {
         Internal_Copy(Other);
         return *this;
     }
 
-    Com_Ptr& operator = (Com_Ptr &&Other) noexcept
+    Com_Ptr&  operator = (Com_Ptr  &&Other) noexcept
     {
         Internal_Move(Other);
         return *this;
     }
 };
 
-FILE           *F;
+
+FILE  *F;
 
 Com_Ptr<IDXGIFactory7>  g_pDXGI_Factory;
 Com_Ptr<IDXGIAdapter4>  g_pDXGI_Adapter;
@@ -109,7 +123,7 @@ int WINAPI  wWinMain(
 {
     // Создание фабрики DXGI, с помощью которой создаются различные объекты для
     // работы с DirectX.
-    CreateDXGIFactory2(0, IID_IDXGIFactory2, g_pDXGI_Factory.Get_Addr() );
+    CreateDXGIFactory2(0, IID_IDXGIFactory2, g_pDXGI_Factory.Get_Addr());
 
     fopen_s(&F, "Adapters.txt", "w+");
 
