@@ -1,5 +1,5 @@
-#include "Common_Defs.h"
-#include "Com_Ptr.h"
+#include  "Common_Defs.h"
+#include  "Com_Ptr.h"
 
 THIRD_PARTY_START
 

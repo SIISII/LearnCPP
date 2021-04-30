@@ -228,7 +228,7 @@ public:
 
 
     // Операция обращения к члену интерфейса.
-    inline Restrict_Interface<T>*  operator->() const noexcept
+    inline Restrict_Interface<T>*  operator -> () const noexcept
     {
         return static_cast<Restrict_Interface<T> *>(Ptr);
     }
