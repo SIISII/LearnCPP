@@ -10,7 +10,10 @@ THIRD_PARTY_START
 
 #include  <DXGI1_6.h>
 
+#include <clocale>
+
 THIRD_PARTY_END
+
 
 
 FILE  *F;
@@ -23,6 +26,8 @@ int WINAPI  wWinMain(
     PWSTR,
     int)
 {
+    std::setlocale(LC_ALL, "Russian");
+
     // Создание фабрики DXGI, с помощью которой создаются различные объекты для
     // работы с DirectX.
     CreateDXGIFactory2(0, IID_PPV_ARGS(g_pDXGI_Factory.Get_Addr()) );
@@ -74,15 +79,56 @@ int WINAPI  wWinMain(
                     {
                         uint32  Num;
 
-                        HR3 = pDXGI_Output1->GetDisplayModeList1(DXGI_FORMAT_R8G8B8A8_UNORM, 0, &Num, nullptr);
+                        const uint32 Flags = DXGI_ENUM_MODES_INTERLACED | DXGI_ENUM_MODES_SCALING | DXGI_ENUM_MODES_STEREO | DXGI_ENUM_MODES_DISABLED_STEREO;
+
+                        HR3 = pDXGI_Output1->GetDisplayModeList1(DXGI_FORMAT_R8G8B8A8_UNORM, Flags, &Num, nullptr);
 
                         DXGI_MODE_DESC1  *Ptr = new DXGI_MODE_DESC1[Num];
 
-                        HR3 = pDXGI_Output1->GetDisplayModeList1(DXGI_FORMAT_R8G8B8A8_UNORM, 0, &Num, Ptr);
+                        HR3 = pDXGI_Output1->GetDisplayModeList1(DXGI_FORMAT_R8G8B8A8_UNORM, Flags, &Num, Ptr);
 
                         for ( uint32  I = 0; I < Num; ++I )
                         {
-                            fwprintf_s(F, L"    %i x %i\n", Ptr[I].Width, Ptr[I].Height);
+                            fwprintf_s(F, L"    %i x %i ", Ptr[I].Width, Ptr[I].Height);
+
+                            if (Ptr[I].RefreshRate.Numerator % Ptr[I].RefreshRate.Denominator == 0)
+                            {
+                                fwprintf_s(F, L"@ %i Hz ", Ptr[I].RefreshRate.Numerator / Ptr[I].RefreshRate.Denominator);
+                            }
+                            else
+                            {
+                                float Res = static_cast<float>(Ptr[I].RefreshRate.Numerator) / static_cast<float>(Ptr[I].RefreshRate.Denominator);
+
+                                fwprintf_s(F, L"@ %7.3f Hz ", Res);
+                            }
+
+                            fwprintf_s(F, L"R8G8B8A8 ");
+
+                            if (Ptr[I].ScanlineOrdering !=  DXGI_MODE_SCANLINE_ORDER_PROGRESSIVE)
+                            {
+                                fwprintf_s(F, L"чересстрочно ");
+                            }
+
+                            switch (Ptr[I].Scaling)
+                            {
+                                case DXGI_MODE_SCALING_CENTERED:
+                                    fwprintf_s(F, L"центрирование ");
+                                    break;
+
+                                case DXGI_MODE_SCALING_STRETCHED:
+                                    fwprintf_s(F, L"растяжение ");
+                                    break;
+                                
+                                case DXGI_MODE_SCALING_UNSPECIFIED:
+                                    break;
+                            }
+
+                            if (Ptr[I].Stereo)
+                            {
+                                 fwprintf_s(F, L"Стерео");
+                            }
+
+                            fwprintf_s(F, L"\n");
                         }
 
                         delete [] Ptr;
