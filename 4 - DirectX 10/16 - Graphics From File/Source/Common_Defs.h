@@ -20,6 +20,7 @@
 #define  THIRD_PARTY_START                                                  \
     __pragma( warning(push) )                                               \
     __pragma( warning(disable: 4005) )                                      \
+    __pragma( warning(disable: 4365) )                                      \
     __pragma( warning(disable: 4514) )                                      \
     __pragma( warning(disable: 4668) )                                      \
     __pragma( warning(disable: 4820) )                                      \

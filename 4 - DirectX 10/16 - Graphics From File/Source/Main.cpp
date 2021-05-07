@@ -3,6 +3,8 @@
 THIRD_PARTY_START
 
 #include  <exception>
+#include  <vector>
+#include  <cstdio>
 
 #include  <Windows.h>
 
@@ -18,7 +20,7 @@ constexpr uint32  Render_Width  = 640;
 constexpr uint32  Render_Height = 480;
 
 constexpr wchar_t  Shader_File_Name[]   = L"Resource\\Shader.fx";
-constexpr wchar_t  Geometry_File_Name[] = L"Resource\\Cube.geo";
+constexpr char     Geometry_File_Name[] = "Resource\\Cube.geo";
 
 
 HWND                         g_hWnd;
@@ -67,8 +69,32 @@ void  Load_Geometry(
     uint32   &Count,
     Vertex*  &Vertices)
 {
+    std::vector<Vertex>  V;
+    FILE  *F;
+    fopen_s(&F, Geometry_File_Name, "r");
 
+    Count = 0;
 
+    while ( !feof(F) )
+    {
+        ++Count;
+        V.resize(Count);
+        fscanf_s(F, "%f", &V[Count - 1].Pos.x);
+        fscanf_s(F, "%f", &V[Count - 1].Pos.y);
+        fscanf_s(F, "%f", &V[Count - 1].Pos.z);
+        fscanf_s(F, "%f", &V[Count - 1].Normal.x);
+        fscanf_s(F, "%f", &V[Count - 1].Normal.y);
+        fscanf_s(F, "%f", &V[Count - 1].Normal.z);
+    }
+
+    fclose(F);
+
+    Vertices = new Vertex[Count];
+
+    for ( uint32  I = 0; I < Count; ++I )
+    {
+        Vertices[I] = V[I];
+    }
 }
 
 
@@ -363,6 +389,9 @@ void  Init_Direct3D10_1()
     Init_Data.SysMemSlicePitch = 0;
 
     CHECK_HR( g_pD3D_Device->CreateBuffer(&BD, &Init_Data, &g_pVertex_Buffer) );
+
+    // Освобождение памяти, занимаемой массивом вершин.
+    delete [] Vertices;
 
     // Мировая матрица будет единичной, т.е. координаты объекта (треугольника)
     // в его собственной и в мировой системах отсчёта будут совпадать.
