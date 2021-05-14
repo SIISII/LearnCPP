@@ -5,6 +5,7 @@ THIRD_PARTY_START
 #include  <exception>
 #include  <vector>
 #include  <cstdio>
+#include  <filesystem>
 
 #include  <Windows.h>
 
@@ -20,7 +21,7 @@ constexpr uint32  Render_Width  = 640;
 constexpr uint32  Render_Height = 480;
 
 constexpr wchar_t  Shader_File_Name[]   = L"Resource\\Shader.fx";
-constexpr char     Geometry_File_Name[] = "Resource\\Cube.geo";
+constexpr char     Geometry_File_Name[] = "Translator\\Cube.bin";
 
 
 HWND                         g_hWnd;
@@ -51,6 +52,8 @@ D3DXMATRIX                   g_World;
 D3DXMATRIX                   g_View;
 D3DXMATRIX                   g_Projection;
 
+uint32                       g_Vertex_Count;
+
 
 struct  Vertex
 {
@@ -71,30 +74,14 @@ void  Load_Geometry(
 {
     std::vector<Vertex>  V;
     FILE  *F;
-    fopen_s(&F, Geometry_File_Name, "r");
+    fopen_s(&F, Geometry_File_Name, "rb");
 
-    Count = 0;
-
-    while ( !feof(F) )
-    {
-        ++Count;
-        V.resize(Count);
-        fscanf_s(F, "%f", &V[Count - 1].Pos.x);
-        fscanf_s(F, "%f", &V[Count - 1].Pos.y);
-        fscanf_s(F, "%f", &V[Count - 1].Pos.z);
-        fscanf_s(F, "%f", &V[Count - 1].Normal.x);
-        fscanf_s(F, "%f", &V[Count - 1].Normal.y);
-        fscanf_s(F, "%f", &V[Count - 1].Normal.z);
-    }
-
-    fclose(F);
+    Count = static_cast<uint32>(std::filesystem::file_size(Geometry_File_Name)) / sizeof(Vertex);
 
     Vertices = new Vertex[Count];
+    fread(Vertices, sizeof(Vertex), Count, F);
 
-    for ( uint32  I = 0; I < Count; ++I )
-    {
-        Vertices[I] = V[I];
-    }
+    fclose(F);
 }
 
 
@@ -363,10 +350,9 @@ void  Init_Direct3D10_1()
         &g_pVertex_Layout) );               // ppInputLayout
 
     // Загрузка геометрии из файла.
-    uint32   Vertex_Count;
     Vertex  *Vertices;
 
-    Load_Geometry(Vertex_Count, Vertices);
+    Load_Geometry(g_Vertex_Count, Vertices);
 
     // Описание вершинного буфера. Он будет включать в себя те же вершины, но
     // размещаться там, где выберет Direct3D в соответствии с задаваемыми пара-
@@ -375,7 +361,7 @@ void  Init_Direct3D10_1()
     D3D10_BUFFER_DESC  BD;
 
     BD.Usage          = D3D10_USAGE_DEFAULT;
-    BD.ByteWidth      = sizeof(Vertex) * Vertex_Count;
+    BD.ByteWidth      = sizeof(Vertex) * g_Vertex_Count;
     BD.BindFlags      = D3D10_BIND_VERTEX_BUFFER,
     BD.CPUAccessFlags = 0;
     BD.MiscFlags      = 0;
@@ -556,7 +542,7 @@ void  Render_Scene()
     for ( uint32  I = 0; I < TD.Passes; ++I )
     {
         g_pTechnique->GetPassByIndex(I)->Apply(0);
-        g_pD3D_Device->DrawIndexed(36, 0, 0);
+        g_pD3D_Device->Draw(g_Vertex_Count, 0);
     }
 
     // Вывод сформированного во вторичном буфере изображения на экран (переклю-

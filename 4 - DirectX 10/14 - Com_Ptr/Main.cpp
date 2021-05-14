@@ -12,6 +12,9 @@ THIRD_PARTY_START
 
 THIRD_PARTY_END
 
+HRESULT GetDesc1(
+    DXGI_OUTPUT_DESC1* pDesc
+);
 
 FILE  *F;
 
@@ -33,9 +36,12 @@ int WINAPI  wWinMain(
 
     uint32   N = 0;
     HRESULT  HR;
+    HRESULT MN;
 
     do
     {
+
+
         // Получение адаптера с номером N. Если его нет, в HR будет помещён код
         // ошибки, иначе - код успеха S_OK.
         HR = g_pDXGI_Factory->EnumAdapterByGpuPreference(
