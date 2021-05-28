@@ -183,7 +183,7 @@ void  Init_Window(
     WC.lpszClassName    = Class_Name;
     WC.hIconSm          = LoadIconW(NULL, IDI_APPLICATION);
 
-    if ( !RegisterClassEx(&WC) )
+    if ( RegisterClassExW(&WC) == 0 )
     {
         throw std::exception();
     }
@@ -239,13 +239,6 @@ void  Init_Direct3D10_1()
         0,                                      // Порядковый номер адаптера
         DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE,   // Критерий выбора адаптера
         IID_PPV_ARGS(&g_pDXGI_Adapter) ) );     // Объект адаптера
-
-    // Получение свойств выбранного адаптера. Реально это не требуется и здесь
-    // сделано, чтобы можно было визуально проконтролировать, тот ли адаптер
-    // был выбран.
-    DXGI_ADAPTER_DESC3  Adapter_Desc;
-
-    CHECK_HR( g_pDXGI_Adapter->GetDesc3(&Adapter_Desc) );
 
     // Создание устройства Direct3D10.1 - т.е. объекта для взаимодействия с гра-
     // фическим процессором (ГП), на котором будет выполняться рендеринг.
