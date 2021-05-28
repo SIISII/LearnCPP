@@ -13,6 +13,98 @@ THIRD_PARTY_START
 
 THIRD_PARTY_END
 
+#include  <cstdint>
+
+#include  <Windows.h>
+#include  <wingdi.h>
+#include  <d2d1.h>
+#include  <dwrite.h>
+
+#include  <cstdio>
+
+#pragma comment(lib, "d2d1")
+#pragma comment(lib, "dwrite")
+
+
+// Коды операций, вызываемых нажатием клавиш (мышкой или на клавиатуре).
+enum  BTN : uint8_t
+{
+    BTN_0 = 0,    // Цифры
+    BTN_1,
+    BTN_2,
+    BTN_3,
+    BTN_4,
+    BTN_5,
+    BTN_6,
+    BTN_7,
+    BTN_8,
+    BTN_9,
+    BTN_ADD,        // +
+    BTN_SUB,        // -
+    BTN_MUL,        // *
+    BTN_DIV,        // /
+    BTN_ASN,        // =
+    BTN_POINT,      // .
+    BTN_MC,         // MC
+    BTN_MR,         // MR
+    BTN_M_ADD,      // M+
+    BTN_M_SUB,      // M-
+    BTN_C,          // C
+    BTN_PROCENT,    // %
+    BTN_BS,          // Backspace
+    BTN_A,
+    BTN_S,
+    BTN_D,
+    BTN_W
+};
+
+
+// Обработчики нажатий клавиш.
+using  Btn_Handler = void (*)(BTN  Code);
+
+void  Btn_Digit(BTN  Code);
+void  Btn_Other(BTN  Code);
+
+
+// Обработчики нажатий на кнопки клавиатуры.
+struct  Key_Desc
+{
+    char            Key_Code;
+    BTN             Code;
+    Btn_Handler     Handler;
+};
+
+const Key_Desc  Keys[] =
+{
+    { '0',    BTN_0,       Btn_Digit },
+    { '1',    BTN_1,       Btn_Digit },
+    { '2',    BTN_2,       Btn_Digit },
+    { '3',    BTN_3,       Btn_Digit },
+    { '4',    BTN_4,       Btn_Digit },
+    { '5',    BTN_5,       Btn_Digit },
+    { '6',    BTN_6,       Btn_Digit },
+    { '7',    BTN_7,       Btn_Digit },
+    { '8',    BTN_8,       Btn_Digit },
+    { '9',    BTN_9,       Btn_Digit },
+    { 'A',    BTN_A,       Btn_Digit },
+    { 'S',    BTN_S,       Btn_Digit },
+    { 'D',    BTN_D,       Btn_Digit },
+    { 'W',    BTN_W,       Btn_Digit },
+    { '+',    BTN_ADD,     Btn_Other },
+    { '-',    BTN_SUB,     Btn_Other },
+    { '*',    BTN_MUL,     Btn_Other },
+    { '/',    BTN_DIV,     Btn_Other },
+    { '=',    BTN_ASN,     Btn_Other },
+    { '\xD',  BTN_ASN,     Btn_Other },
+    { '.',    BTN_POINT,   Btn_Other },
+    { '%',    BTN_PROCENT, Btn_Other },
+    { '\x1B', BTN_C,       Btn_Other },
+    { '\x8',  BTN_BS,      Btn_Other }
+};
+
+
+
+
 
 constexpr uint32  Render_Width  = 640;
 constexpr uint32  Render_Height = 480;
@@ -533,6 +625,27 @@ void  Cleanup()
 //
 // =============================================================================
 
+
+
+void Btn_Other(BTN Code)
+{
+    static float  Angle = 0.0f;
+    switch (Code)
+    {
+        case BTN_W:
+            D3DXMatrixRotationY(&g_World, Angle);
+            break;
+        case BTN_A:
+            D3DXMatrixRotationX(&g_World, Angle);
+            break;
+        case BTN_D:
+            D3DXMatrixRotationZ(&g_World, Angle);
+            break;
+        default:
+            break;
+    }
+}
+
 void  Render_Scene()
 {
     // Определение цвета закраски окна.
@@ -554,7 +667,7 @@ void  Render_Scene()
     Angle += static_cast<float>(Delta_Time) / 1000.0f;
     
     // Корректировка мировой матрицы для поворота куба.
-    D3DXMatrixRotationY(&g_World, Angle);
+    Btn_Other(BTN_W);
 
     // Привязка матриц к переменным шейдеров.
     g_pWorld->SetMatrix(reinterpret_cast<float*>(&g_World));
