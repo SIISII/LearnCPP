@@ -10,18 +10,20 @@ volatile char C;
 HANDLE Buffer_Empty;
 HANDLE Buffer_Full;
 
-std::thread Thread(Second_Thread);
+std::thread *Thread;
 
 int main()
 {
     std::setlocale(LC_ALL, "Russian");
     Buffer_Empty = CreateEventW(nullptr, true, true, nullptr);
     Buffer_Full = CreateEventW(nullptr, true, false, nullptr);
+    Thread = new std::thread(Second_Thread);
     while (true)
     {
-        while ( B );
+        WaitForSingleObject(Buffer_Empty, INFINITE);
+        ResetEvent(Buffer_Empty);
         C = getc(stdin);
-        B = true;
+        SetEvent(Buffer_Full);
     }
 }
 
@@ -29,9 +31,10 @@ void Second_Thread()
 {
     while (true)
     {
-        while ( !B );
+        WaitForSingleObject(Buffer_Full, INFINITE);
+        ResetEvent(Buffer_Full);
         putc(C, stdout);
-        B = false;
+        SetEvent(Buffer_Empty);
     }
 }
 
