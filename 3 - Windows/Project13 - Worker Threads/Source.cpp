@@ -1,56 +1,61 @@
-#include <cstdio>
-#include <clocale>
-#include <thread>
-#include <Windows.h>
-#include <vector>
-#include <queue>
-#include <mutex>
-#include <cstdlib>
-#include <atomic>
+#include  <cstdio>
+#include  <clocale>
+#include  <thread>
+#include  <Windows.h>
+#include  <vector>
+#include  <queue>
+#include  <mutex>
+#include  <cstdlib>
+#include  <atomic>
 
 constexpr int  Num_Threads = 10;
 constexpr int  Num_Numbers = 500;
 
-void Second_Thread();
+
+void  Second_Thread();
+
 
 std::vector<std::thread *>  Threads;
-std::queue<int>  Queue;
-std::mutex  Mutex;
-std::atomic_int  Counter = 0;
+std::queue<int>             Queue;
+std::mutex                  Mutex;
+std::atomic_int             Counter = 0;
+std::atomic_int             Print_Counter = 0;
 
-int main()
+
+int  main()
 {
     std::setlocale(LC_ALL, "Russian");
     
     srand(478);
 
-    for (int i = 0; i < Num_Threads; ++i)
+    for ( int  I = 0; I < Num_Threads; ++I )
     {
         Threads.push_back(new std::thread(Second_Thread));
     }
 
-    for (int I = 0; I < Num_Numbers; ++I)
+    for ( int  I = 0; I < Num_Numbers; ++I )
     {
         Mutex.lock();
         Queue.push(rand());
         Mutex.unlock();
     }
 
-    while (!Queue.empty());
+    while ( Print_Counter == Num_Numbers );
 }
 
-void Second_Thread()
+
+void  Second_Thread()
 {
-    int Thread_Num = Counter++;
+    int  Thread_Num = Counter++;
     
-    while (true)
+    while ( true )
     {
-        int Cur_Num;
-        bool Present = false;
+        int   Cur_Num;
+        bool  Present = false;
 
         Mutex.lock();
 
-        if (!Queue.empty())
+        if ( !Queue.empty() )
         {
             Present = true;
             Cur_Num = Queue.front();
@@ -59,9 +64,10 @@ void Second_Thread()
 
         Mutex.unlock();
 
-        if (Present)
+        if ( Present )
         {
             printf_s("%i %i \n", Cur_Num, Thread_Num);
+            ++Print_Counter;
         }
     }
 }
