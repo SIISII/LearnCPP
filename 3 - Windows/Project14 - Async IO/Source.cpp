@@ -17,7 +17,7 @@ int  main()
     E = CreateEvent(nullptr, true, false, nullptr);
 
     F = CreateFileW(
-        L"File.txt",
+        L"D:\\File.txt",
         GENERIC_WRITE,
         FILE_SHARE_READ,
         nullptr,
@@ -25,24 +25,32 @@ int  main()
         FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED,
         NULL);
 
+    OVERLAPPED  Ov = {};
+    Ov.hEvent = E;
+
+    int Counter = 0;
+
     for ( int  I = 0; I < Num_Numbers; ++I )
     {
-        OVERLAPPED  Ov = {};
-        Ov.hEvent = E;
-
-        char  S[16];
+        char  S[1000000];
         sprintf_s(S, sizeof(S), "%i\n", rand());
-        int  Len = strlen(S);
+        //int  Len = strlen(S);
+        int  Len = 1000000;
         WriteFile(
             F,
             S,
             Len,
             nullptr,
             &Ov);
-        WaitForSingleObject(E, INFINITE);
+        while ( WaitForSingleObject(E, INFINITE) != WAIT_OBJECT_0 )
+        {
+            ++Counter;
+        }
+        Ov.Offset = Ov.Offset + Len;
         ResetEvent(E);
     }
-
+    printf("%i", Counter);
 
     CloseHandle(F);
+    CloseHandle(E);
 }
