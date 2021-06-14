@@ -10,8 +10,6 @@ HANDLE  E;
 
 int  Counter = 0;
 
-const char  Dummy[16384] {};
-
 
 int  main()
 {
@@ -19,7 +17,7 @@ int  main()
     
     srand(478);
 
-    E = CreateEvent(nullptr, true, false, nullptr);
+    E = CreateEventW(nullptr, true, false, nullptr);
 
     F = CreateFileW(
         L"File.txt",
@@ -31,6 +29,7 @@ int  main()
         NULL);
 
     OVERLAPPED  Ov {};
+
     Ov.hEvent = E;
 
     int  Counter = 0;
