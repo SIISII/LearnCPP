@@ -47,7 +47,7 @@ int  main()
 void  Second_Thread()
 {
     int  Thread_Num = Counter++;
-    
+
     while ( true )
     {
         int   Cur_Num;

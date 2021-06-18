@@ -3,7 +3,6 @@
 #include  <Windows.h>
 
 
-constexpr int  Num_Threads = 10;
 constexpr int  Num_Numbers = 500;
 
 
@@ -13,7 +12,7 @@ void CALLBACK  Work_Callback_Proc(
     PTP_WORK               Work);
 
 
-TP_CALLBACK_ENVIRON  CB_Env {};
+TP_CALLBACK_ENVIRON  CB_Env  {};
 
 PTP_POOL             Pool          = nullptr;
 PTP_CLEANUP_GROUP    Cleanup_Group = nullptr;
@@ -27,7 +26,7 @@ int  main()
 
     Pool = CreateThreadpool(nullptr);
 
-    SetThreadpoolThreadMaximum(Pool, 20);
+    SetThreadpoolThreadMaximum(Pool, 120);
     SetThreadpoolThreadMinimum(Pool, 5);
 
     SetThreadpoolCallbackPool(&CB_Env, Pool);
