@@ -1,7 +1,7 @@
 #include  <cstdio>
 #include  <clocale>
-#include  <cstdlib>
 #include  <Windows.h>
+
 
 constexpr int  Num_Threads = 10;
 constexpr int  Num_Numbers = 500;
