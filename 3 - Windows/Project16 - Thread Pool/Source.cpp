@@ -26,7 +26,7 @@ int  main()
 
     Pool = CreateThreadpool(nullptr);
 
-    SetThreadpoolThreadMaximum(Pool, 120);
+    SetThreadpoolThreadMaximum(Pool, 20);
     SetThreadpoolThreadMinimum(Pool, 5);
 
     SetThreadpoolCallbackPool(&CB_Env, Pool);

@@ -44,5 +44,5 @@ int  main()
     printf("Sum = %i\n", Sum);
     printf("Min = %i\n", Min);
     printf("Max = %i\n", Max);
-    printf("Average = %f\n", float(Sum + 2) / float(Qty));
+    printf("Average = %f\n", float(Sum) / float(Qty));
 }

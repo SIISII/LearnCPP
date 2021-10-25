@@ -35,7 +35,7 @@ int  main()
              &&
              (S[I-1] == 'a' || S[I-1] == 'A') )
         {
-            Count++;
+            ++Count;
         }
     }
 
